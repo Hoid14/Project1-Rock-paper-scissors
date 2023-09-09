@@ -15,7 +15,7 @@ let getComputerChoice=()=>{
 
 let playRound=(playerSelection,computerSelection)=>{
     if (playerSelection===computerSelection){
-        return ["tied round"]
+        return ["tied round", "empate"]
     }
     else if(playerSelection==="rock"){
         if(computerSelection==="paper"){
@@ -43,28 +43,55 @@ let playRound=(playerSelection,computerSelection)=>{
     }
 }
 
+const btns=document.querySelectorAll("#btn");
+const displayResult=document.querySelector("#result");
+
+
+
+
+
 let game=()=>{
     puntos_jugador=0
     puntos_maquina=0
     conteo_ronda=1
-    while(puntos_jugador<5 && puntos_maquina<5){
-        console.log(`Round ${conteo_ronda}`)
-        console.log(`Player ${puntos_jugador} Machine ${puntos_maquina}`)
-        computerSelection=getComputerChoice()
-        playerSelection=prompt("Choose \"rock\", \"paper\" or \"scissors\"")
-        playerSelection=playerSelection.toLowerCase()
-        ronda=playRound(playerSelection,computerSelection)
-
-        if(ronda[1]==="jugador") puntos_jugador+=1
-        else if(ronda[1]==="maquina")puntos_maquina+=1
-        console.log(ronda[0])
-        conteo_ronda+=1
-    }
-    console.log(`Round ${conteo_ronda}`)
-    console.log(`Player ${puntos_jugador} Machine ${puntos_maquina}`)
-    if (puntos_jugador===5)console.log("Player win game!")
-    else if(puntos_maquina===5)console.log("Machine win game!")
+    
+   
+    btns.forEach((btn)=>{
+        btn.addEventListener("click", (e) => {
+            result= playRound(e.target.textContent,getComputerChoice())
+            if (result[1]==="jugador"){
+                puntos_jugador+=1
+            }
+            else if(result[1]==="maquina"){
+                puntos_maquina+=1
+            }
+            displayResult.innerHTML=`
+            Round ${conteo_ronda}: 
+            <br/>${result[0]}
+            <br/>Current Score:
+            <br/>Player: ${puntos_jugador} points
+            <br/>Machine: ${puntos_maquina} points`
+            conteo_ronda+=1
+            if (puntos_jugador===5 || puntos_maquina){
+                if (puntos_jugador===5){
+                    displayResult.textContent=`Ganaste!`
+                    puntos_jugador=0
+                    puntos_maquina=0
+                    conteo_ronda=1
+                }
+                else if(puntos_maquina===5){
+                    displayResult.textContent=`Perdiste!`
+                    puntos_jugador=0
+                    puntos_maquina=0
+                    conteo_ronda=1
+                }
+            }
+        })
+    })
+    
+    
 }
+
 
 game()
 
